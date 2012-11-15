@@ -1,3 +1,4 @@
 #!/bin/bash
 
-coffee -jbc -o foo.js boolean arithmetic list stdlib
+coffee -jbc boolean arithmetic list meta stdlib test
+mv ./-b.js lambda.js

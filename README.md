@@ -20,7 +20,7 @@ any of the following:
  
  * Any functions with more than one argument
  * Variables
- * Arithmetic operators +, -, *, /, % etc.
+ * Arithmetic operators +, -, \*, /, % etc.
  * Boolean operators ||, && etc.
  * Comparison operators ==, <, <=, >, >= etc.
  * Named recursion

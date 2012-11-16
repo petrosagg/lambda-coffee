@@ -1,4 +1,5 @@
-**λ-coffee** is a λ-calculus implementation in CoffeeScript.
+**λ-coffee** is a [λ-calculus](http://en.wikipedia.org/wiki/Lambda_calculus) implementation in
+CoffeeScript.
 
 Authors
 =======
@@ -11,8 +12,11 @@ Authors
 University of Athens](http://www.ntua.gr/). They built this code to improve their knowledge in
 λ-calculus.
 
-Implementation
-==============
+Details
+=======
+
+This is an exercise attempting to define everything from scratch utilizing only the 
+minimum constructs of a core programming language.
 
 It uses only single function definitions to define a whole Turing-complete language
 which can support anything from integer operations to arrays. It does **not** utilize
@@ -21,7 +25,8 @@ any of the following:
  * Any functions with more than one argument
  * Variables
  * Arithmetic operators +, -, \*, /, % etc.
- * Boolean operators ||, && etc.
+ * Boolean operators ||, &&, ! etc.
+ * Bitwise operators |, & etc.
  * Comparison operators ==, <, <=, >, >= etc.
  * Named recursion
  * Loops of any kind (for, while, do)
@@ -33,6 +38,9 @@ It only uses two language features:
  * Calling an anonymous (lambda) function with one argument
  * Defining an anonymous (lambda) function with one argument
 
+However, we *define* everything above in our own way. For example, we don't use the regular integers, but
+we define a different way to represent integers from scratch.
+
 For integers, we use a similar encoding to [Church-encoding](http://en.wikipedia.org/wiki/Church_encoding)
 which is more convenient for defining arithmetical operations. In particular:
 
@@ -41,12 +49,20 @@ which is more convenient for defining arithmetical operations. In particular:
 </code>
 
 <code>
-n = λy.y (decr n)
+n = λy.y (pred n)
 </code>
 
-where (<code>decr n</code>) denotes the predecessor of <code>n</code>.
+where (<code>pred n</code>) denotes the predecessor of <code>n</code>.
 
-Boolean values and boolean operators are defined using the usual Church encoding.
+Boolean values and boolean operators are defined using the usual Church encoding:
+
+<code>
+T = λx.λy.x
+</code>
+
+<code>
+⊥ = λx.λy.y
+</code>
 
 Lists and streams are as in Scheme, with basic operators cons, head, tail etc.
 

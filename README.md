@@ -38,6 +38,9 @@ which is more convenient for defining arithmetical operations. In particular:
 
 <code>
 0 = λx.x
+</code>
+
+<code>
 n = λy.y (decr n)
 </code>
 

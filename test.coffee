@@ -3,26 +3,29 @@ assertTrue = (cond, msg) ->
 		console.log "FAIL: ", msg
 	else
 		console.log "PASS"
-#
-#
-# Define some numbers to play with
-global._0 = _0
-for i in [1..30]
-	global["_" + i] = incr(global["_" + (i - 1)])
 
-# Greater than test case
-_if( gt(_6)(_5) )(
-	(z) -> console.log("Good")
-)(
-	(z) -> console.log("Bad")
-)
+assertFalse = (cond, msg) ->
+	if cond
+		console.log "FAIL: ", msg
+	else
+		console.log "PASS"
 
-# Div operation test case
-print(div(_21)(_3))
+assertEquals = (a, b, msg) ->
+	assertTrue(a == b, msg)
 
-l = buildList([_0, _1, _2, _3])
-printList(l)
+assertTop = (cond, msg) ->
+	_if(cond)(
+		(z) -> assertTrue(true, msg)
+	)(
+		(z) -> assertTrue(false, msg)
+	)
 
+assertBottom = (cond, msg) ->
+	_if(cond)(
+		(z) -> assertFalse(true, msg)
+	)(
+		(z) -> assertFalse(false, msg)
+	)
 testCases =
 	testBoolean: ->
 		_if(_true)(
@@ -91,5 +94,73 @@ testCases =
 		)(
 			(z) -> assertTrue(true)
 		)
+	testArithmetic: ->
+		assertEq = (a, b, msg) ->
+			assertTop(eq(a)(b), msg)
 
-testCases.testBoolean()
+		# equality
+		assertTop(eq(@_0)(@_0), "0 != 0")
+		assertBottom(eq(@_0)(@_1), "0 == 1")
+
+		# add
+		assertTop(eq(add(@_0)(@_0))(@_0))
+		assertTop(eq(add(@_11)(@_31))(@_42))
+
+		# sub
+		assertTop(eq(sub(@_0)(@_0))(@_0))
+		assertTop(eq(sub(@_52)(@_10))(@_42))
+
+		# mul
+		assertTop(eq(mul(@_0)(@_42))(@_0))
+		assertTop(eq(mul(@_42)(@_1))(@_42))
+		assertTop(eq(mul(@_3)(@_5))(@_15))
+
+		# TODO: div, mod
+
+		# comparisons
+		assertTop(gt(@_6)(@_5))
+		assertBottom(gt(@_5)(@_6))
+		assertTop(lt(@_5)(@_6))
+		assertBottom(lt(@_6)(@_5))
+
+	testList: ->
+		assertTop(isEmpty(emptyList), 'The empty list is not empty')
+		assertTop(eq(head cons(_0)(emptyList))(_0), 'head [0] != 0')
+		assertTop(isEmpty(tail cons(_0)(emptyList)), 'tail [0] != []')
+		assertTop(
+			eq(
+				head(
+					tail(
+				 		cons(_0)(
+				 			cons(_1)(
+				 				emptyList
+				 			)
+				 		)
+				 	 )
+				)
+			)(
+				_1
+			)
+		)
+	testMagic: ->
+		fac = Y((fac) ->
+			(n) ->
+				_if( isZero n )(
+					(z) -> _1
+				)(
+					(z) -> mul(n)(fac(decr(n)))
+				)
+			)
+
+		assertTop(eq(fac(@_5))(@_120), "3! != 6")
+
+
+Object.defineProperty(testCases, "_0", {value: _0})
+for i in [1..120]
+	Object.defineProperty(testCases, "_" + i,
+		value: incr(testCases["_" + (i - 1)])
+	)
+
+for key of testCases
+	console.log "Running test: ", key
+	testCases[key]()

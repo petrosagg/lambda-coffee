@@ -142,6 +142,18 @@ testCases =
 				_1
 			)
 		)
+	testStreams: ->
+		allOnes = Y((allOnes) ->
+			(z) -> consStream(_1)((z) -> allOnes(_true))
+		)()
+		l = take(addStreams(allOnes)(allOnes))(@_5)
+		printList(l)
+		naturals = Y((naturals) ->
+			(z) -> consStream(_1)(
+				(z) -> addStreams(naturals _true)(allOnes)
+			)
+		)()
+		printList(take(naturals)(@_5))
 	testMagic: ->
 		fac = Y((fac) ->
 			(n) ->

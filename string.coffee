@@ -9,4 +9,4 @@ stringBuilder = Y((stringBuilder) ->
 		)
 )
 
-newString = stringBuilder emptyList
+newString = stringBuilder nil

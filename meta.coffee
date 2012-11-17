@@ -21,11 +21,11 @@ metaUneval = (n) ->
 
 log = console.log.bind console
 print = O(log)(metaEval)
-printList = map print
+printList = O(length)(map print)
 
 buildList = (els) ->
 	if els.length is 0
-		emptyList
+		nil
 	else
 		h = els.shift()
 		cons(h)(buildList(els))

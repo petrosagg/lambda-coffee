@@ -1,26 +1,27 @@
 # vim: set noexpandtab:
 #
-emptyList = True True
-cons = (x) -> (y) -> (emptyCheck) -> emptyCheck(False)((cond) -> cond(x)(y))
-pair = (a) -> (b) -> cons(a)(cons(b)(emptyList))
+consLazy = (head) -> (tailPromise) -> (emptyCheck) ->
+	If( emptyCheck )(
+		(z) -> False
+	)(
+		(z) -> (headOrTail) ->
+			If( headOrTail )(
+				(z) -> head
+			)(
+				(z) -> (tailPromise z)
+			)
+	)
+cons = (x) -> (y) -> consLazy(x)((z) -> y)
+
 head = (l) -> l(False)(True)
-fst = head
 tail = (l) -> l(False)(False)
-snd = O(head)(tail)
+
+nil = True True
 isEmpty = (l) -> l True
 
-filter = Y((filter) ->
-	(f) -> (l) ->
-		If( isEmpty l )(
-			(z) -> emptyList
-		)(
-			(z) -> If(f (head l))(
-				cons(head l)(filter(f)(tail l))
-			)(
-				filter(f)(tail l)
-			)
-		)
-)
+pair = (a) -> (b) -> cons(a)(cons(b)(nil))
+fst = head
+snd = O(head)(tail)
 
 length = Y((length) ->
 	(l) ->
@@ -30,16 +31,52 @@ length = Y((length) ->
 			(z) -> incr(length(tail l))
 		)
 )
-
+take = Y((take) ->
+	(l) -> (n) ->
+		If( isZero n )(
+			(z) -> nil
+		)(
+			(z) -> cons(head l)(take(tail l)(decr n))
+		)
+)
+zip = Y((zip) ->
+	(f) -> (l1) -> (l2) ->
+		If( Or(isEmpty l1)(isEmpty l2) )(
+			(z) -> nil
+		)(
+			(z) ->
+				consLazy(
+					f(head l1)(head l2)
+				)(
+					(z) -> zip(f)(tail l1)(tail l2)
+				)
+		)
+)
+filter = Y((filter) ->
+	(f) -> (l) ->
+		If( isEmpty l )(
+			(z) -> nil
+		)(
+			(z) ->
+                If(f (head l))(
+                    (z) ->
+                        consLazy(head l)(
+                            (z) -> filter(f)(tail l)
+                        )
+                )(
+                    (z) ->
+                        filter(f)(tail l)
+                )
+		)
+)
 map = Y((map) ->
 	(f) -> (l) ->
 		If( isEmpty l )(
-			(z) -> emptyList
+			(z) -> nil
 		)(
-			(z) -> cons(f(head l))(map(f)(tail l))
+			(z) -> consLazy(f(head l))((z) -> map(f)(tail l))
 		)
 )
-
 listEq = Y((listEq) ->
     (l1) -> (l2) ->
         If( isEmpty l1 )(
@@ -53,16 +90,15 @@ listEq = Y((listEq) ->
                 )
         )
 )
-
+addLists = zip add
 listItem = Y((listItem) ->
 	(l) -> (i) ->
-		If( Or(eq(length(l))(_1))(eq(i)(_0)) )(
+		If( Or(eq(length(l))(_1))(isZero i) )(
 			(z) -> head l
 		)(
 			(z) -> listItem(tail l)(decr(i))
 		)
 )
-
 push = Y((push) ->
 	(l) -> (i) ->
 		If( isEmpty l )(

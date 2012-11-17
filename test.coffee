@@ -141,29 +141,48 @@ testCases =
 		assertTop(lt(@_5)(@_6))
 		assertBottom(lt(@_6)(@_5))
 	testList: ->
-		assertTop(isEmpty(emptyList), 'The empty list is not empty')
-		assertTop(eq(head cons(_0)(emptyList))(_0), 'head [0] != 0')
-		assertTop(isEmpty(tail cons(_0)(emptyList)), 'tail [0] != []')
-		oneTwoThree = cons(_1)(cons(@_2)(cons(@_3)(emptyList)))
+		assertTop(isEmpty(nil), 'The empty list is not empty')
+		assertTop(eq(head consLazy(_0)((z) -> True))(_0), 'head [0] != 0 (or tail promise called unnecessarily)')
+		assertTop(eq(head cons(_0)(nil))(_0), 'head [0] != 0')
+		assertTop(isEmpty(tail cons(_0)(nil)), 'tail [0] != []')
+		assertTop(eq(length(nil))(_0))
+		oneTwoThree = cons(_1)(cons(@_2)(cons(@_3)(nil)))
+		assertTop(eq(length(oneTwoThree))(@_3))
 		assertTop(eq(head(tail oneTwoThree))(@_2), 'head tail [1, 2, 3] != 2')
-		assertTop(eq(listItem(oneTwoThree)(_0))(@_1), 'item 0 of [1, 2, 3] is not 1')
-		assertTop(eq(listItem(oneTwoThree)(_1))(@_2), 'item 1 of [1, 2, 3] is not 2')
+		assertTop(eq(listItem(oneTwoThree)(@_0))(@_1), 'item 0 of [1, 2, 3] is not 1')
+		assertTop(eq(listItem(oneTwoThree)(@_1))(@_2), 'item 1 of [1, 2, 3] is not 2')
 		assertTop(eq(listItem(oneTwoThree)(@_2))(@_3), 'item 2 of [1, 2, 3] is not 3')
-		assertTop(listEq(emptyList)(emptyList))
-	testStreams: ->
+		assertTop(listEq(nil)(nil))
+		twoThreeFour = map((x) -> incr(x))(oneTwoThree)
+		assertTop(eq(length twoThreeFour)(@_3))
+		assertTop(eq(head twoThreeFour)(@_2))
+		assertTop(eq(head(tail twoThreeFour))(@_3))
+		assertTop(eq(head(tail(tail twoThreeFour)))(@_4))
+		twoFourSix = map((x) => mul(@_2)(x))(oneTwoThree)
+		assertTop(eq(length twoFourSix)(@_3))
+		assertTop(eq(head twoFourSix)(@_2))
+		assertTop(eq(head(tail twoFourSix))(@_4))
+		assertTop(eq(head(tail(tail twoFourSix)))(@_6))
+		twoFour = filter((x) => isZero mod(x)(@_2))(twoThreeFour)
+		assertTop(eq(length twoFour)(@_2))
+		assertTop(eq(head twoFour)(@_2))
+		assertTop(eq(head(tail twoFour))(@_4))
+	testInfiniteList: ->
 		allOnes = Y((allOnes) ->
-			(z) -> consStream(_1)((z) -> allOnes(True))
+			(z) -> consLazy(_1)((z) -> allOnes(True))
 		)()
 		l = take(allOnes)(@_5)
 		assertTop(eq(head(tail(tail(tail(tail l)))))(_1))
 
 		naturals = Y((naturals) ->
-			(z) -> consStream(_1)(
-				(z) -> addStreams(naturals True)(allOnes)
+			(z) -> consLazy(_1)(
+				(z) -> addLists(naturals True)(allOnes)
 			)
 		)()
-		l = take(naturals)(@_5)
-		assertTop(eq(head(tail(tail(tail(tail l)))))(@_5))
+		oneToFive = take(naturals)(@_5)
+		assertTop(eq(head(tail(tail(tail(tail oneToFive)))))(@_5))
+		assertTop(eq(length(oneToFive))(@_5))
+		# printList l
 
 		# two = consStream(@_2)(
 		# 	(z) -> emptyStream
@@ -202,13 +221,17 @@ for i in [65..90]
 	)
 Object.defineProperty(testCases, "_SPACE", testCases._32)
 
+red = '\x1b[31m'
+green = '\x1b[32m'
+reset = '\x1b[0m'
+
 for key of testCases
 	console.log "Running test: ", key
 	numAsserts = 0
 	try
 		testCases[key]()
-		console.log "PASS " + numAsserts + " assertions"
+		console.log green + "PASS " + numAsserts + " assertions" + reset
 	catch error
 		if numAsserts is not 0
 			console.log "PASS " + numAsserts + " assertions"
-		console.log "FAIL: " + error
+		console.log red + "FAIL: " + error + reset

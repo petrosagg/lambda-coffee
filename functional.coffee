@@ -1,5 +1,7 @@
-compose = (f) -> (g) -> (x) -> f(g(x))
+# composition
+O = (f) -> (g) -> (x) -> f(g(x))
 
+# recursion
 Y = (f) -> (
 	(x) -> f((v) -> x(x)(v))
 )(

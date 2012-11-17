@@ -1,3 +1,5 @@
+# vim: set noexpandtab:
+#
 # Meta-stuff
 metaEval = (n) ->
 	stateEval = (n, i) ->
@@ -17,16 +19,17 @@ metaUneval = (n) ->
 
 	stateUneval(n, _0)
 
-print = (n) ->
-	console.log(metaEval n)
-
+log = console.log.bind console
+print = O(log)(metaEval)
 printList = map print
 
 buildList = (els) ->
 	if els.length is 0
-		console.log("Returning emptyList")
 		emptyList
 	else
 		h = els.shift()
-		console.log("Running cons(#{metaEval(h)})(buildList(", els.map(metaEval), "))")
 		cons(h)(buildList(els))
+
+printChar = O(O(log)(String.fromCharCode))(metaEval)
+
+printString = map printChar

@@ -1,3 +1,6 @@
+# vim: set noexpandtab:
+#
+
 # Identity function
 id = (x) -> x
 

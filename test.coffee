@@ -168,6 +168,8 @@ testCases =
 		assertTop(eq(head twoFour)(@_2))
 		assertTop(eq(head(tail twoFour))(@_4))
 	testInfiniteList: ->
+		assertTop(listEq(nil)(nil))
+		assertTop(eq(reduce(add)(oneTwoThree)(@_0))(@_6), '[1, 2, 3].reduce(add, 0) is not 6')
 		allOnes = Y((allOnes) ->
 			(z) -> consLazy(_1)((z) -> allOnes(True))
 		)()

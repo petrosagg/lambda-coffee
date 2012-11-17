@@ -17,6 +17,7 @@ head = (l) -> l(False)(True)
 tail = (l) -> l(False)(False)
 
 nil = True True
+$nil = (z) -> nil
 isEmpty = (l) -> l True
 
 pair = (a) -> (b) -> cons(a)(cons(b)(nil))
@@ -91,12 +92,12 @@ listEq = Y((listEq) ->
         )
 )
 addLists = zip add
-listItem = Y((listItem) ->
+item = Y((item) ->
 	(l) -> (i) ->
 		If( Or(eq(length(l))(_1))(isZero i) )(
 			(z) -> head l
 		)(
-			(z) -> listItem(tail l)(decr(i))
+			(z) -> item(tail l)(decr(i))
 		)
 )
 push = Y((push) ->
@@ -109,10 +110,12 @@ push = Y((push) ->
 )
 
 reduce = Y((reduce) ->
-	(f) -> (l) -> (v) ->
+	(f) -> (v) -> (l) ->
 		If( isEmpty l )(
 			(z) -> v
 		)(
-			(z) -> reduce(f)(tail l)(f(v)(head l))
+			(z) -> reduce(f)(f(v)(head l))(tail l)
 		)
 )
+sum = reduce(add)(_0)
+product = reduce(mul)(_1)

@@ -142,6 +142,7 @@ testCases =
 		assertBottom(lt(@_6)(@_5))
 	testList: ->
 		assertTop(isEmpty(nil), 'The empty list is not empty')
+		assertTop(listEq(nil)(nil))
 		assertTop(eq(head consLazy(_0)((z) -> True))(_0), 'head [0] != 0 (or tail promise called unnecessarily)')
 		assertTop(eq(head cons(_0)(nil))(_0), 'head [0] != 0')
 		assertTop(isEmpty(tail cons(_0)(nil)), 'tail [0] != []')
@@ -149,9 +150,9 @@ testCases =
 		oneTwoThree = cons(_1)(cons(@_2)(cons(@_3)(nil)))
 		assertTop(eq(length(oneTwoThree))(@_3))
 		assertTop(eq(head(tail oneTwoThree))(@_2), 'head tail [1, 2, 3] != 2')
-		assertTop(eq(listItem(oneTwoThree)(@_0))(@_1), 'item 0 of [1, 2, 3] is not 1')
-		assertTop(eq(listItem(oneTwoThree)(@_1))(@_2), 'item 1 of [1, 2, 3] is not 2')
-		assertTop(eq(listItem(oneTwoThree)(@_2))(@_3), 'item 2 of [1, 2, 3] is not 3')
+		assertTop(eq(item(oneTwoThree)(@_0))(@_1), 'item 0 of [1, 2, 3] is not 1')
+		assertTop(eq(item(oneTwoThree)(@_1))(@_2), 'item 1 of [1, 2, 3] is not 2')
+		assertTop(eq(item(oneTwoThree)(@_2))(@_3), 'item 2 of [1, 2, 3] is not 3')
 		assertTop(listEq(nil)(nil))
 		twoThreeFour = map((x) -> incr(x))(oneTwoThree)
 		assertTop(eq(length twoThreeFour)(@_3))
@@ -167,9 +168,9 @@ testCases =
 		assertTop(eq(length twoFour)(@_2))
 		assertTop(eq(head twoFour)(@_2))
 		assertTop(eq(head(tail twoFour))(@_4))
+		assertTop(eq(reduce(add)(@_0)(oneTwoThree))(@_6), '[1, 2, 3].reduce(add, 0) is not 6')
+		assertTop(eq(sum(twoThreeFour))(@_9))
 	testInfiniteList: ->
-		assertTop(listEq(nil)(nil))
-		assertTop(eq(reduce(add)(oneTwoThree)(@_0))(@_6), '[1, 2, 3].reduce(add, 0) is not 6')
 		allOnes = Y((allOnes) ->
 			(z) -> consLazy(_1)((z) -> allOnes(True))
 		)()
@@ -184,27 +185,29 @@ testCases =
 		oneToFive = take(naturals)(@_5)
 		assertTop(eq(head(tail(tail(tail(tail oneToFive)))))(@_5))
 		assertTop(eq(length(oneToFive))(@_5))
-		# printList l
 
-		# two = consStream(@_2)(
-		# 	(z) -> emptyStream
-		# )
-		# oneTwo = consStream(@_1)(
-		# 	(z) -> two
-		# )
+		oneTwo = consLazy(@_1)(
+			(z) => consLazy(@_2)($nil)
+		)
 
-		# printList take(oneTwo)(@_2)
+		even = filter((x) => isZero mod(x)(@_2))(naturals)
+		assertTop(eq(item(take(even)(@_10))(@_10))(@_20))
 
-		# even = filterStream((x) -> True)(
-		# printList take(oneTwo)(@_2)
+		even2 = map((x) => mul(@_2)(x))(naturals)
+		assertTop(eq(item(take(even2)(@_10))(@_10))(@_20))
 
-		# sieve = (s) -> consStream(headStream s)(
-		#   	(z) ->
-		#  		filterStream(
-		#  			(x) -> not(isZero mod(x)(headStream s))
-		#  		)(sieve(tail s))
-		# )
-		# printList take(sieve(tail naturals))(@_1)
+		sieve = Y((sieve) ->
+			(l) ->
+				consLazy(head l)(
+					(z) ->
+						filter(
+							(x) -> Not(isZero mod(x)(head l))
+						)(sieve (tail l))
+				)
+		)
+		primes = sieve(tail naturals)
+		firstPrimes = take(primes)(@_10)
+		assertTop(eq(item(firstPrimes)(@_29))(@_29))
 
 	# testStrings: ->
 	#	 printString newString(@_H)(@_E)(@_L)(@_L)(@_O)(_0)

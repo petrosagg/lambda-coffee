@@ -150,6 +150,7 @@ testCases =
 		assertTop(eq(listItem(oneTwoThree)(_1))(@_2), 'item 1 of [1, 2, 3] is not 2')
 		assertTop(eq(listItem(oneTwoThree)(@_2))(@_3), 'item 2 of [1, 2, 3] is not 3')
 		assertTop(listEq(emptyList)(emptyList))
+		assertTop(eq(reduce(add)(oneTwoThree)(@_0))(@_6), '[1, 2, 3].reduce(add, 0) is not 6')
 	testStreams: ->
 		allOnes = Y((allOnes) ->
 			(z) -> consStream(_1)((z) -> allOnes(True))

@@ -71,3 +71,12 @@ push = Y((push) ->
 			(z) -> cons(head l)(push(tail l)(i))
 		)
 )
+
+reduce = Y((reduce) ->
+	(f) -> (l) -> (v) ->
+		If( isEmpty l )(
+			(z) -> v
+		)(
+			(z) -> reduce(f)(tail l)(f(v)(head l))
+		)
+)

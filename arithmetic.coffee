@@ -15,15 +15,15 @@ decr = (x) -> x _0
 _1 = incr _0
 
 # Define isZero condition (black magic)
-isZero = (num) -> _1(num(_true _true))
+isZero = (num) -> _1(num(True True))
 
 # Define equality
 eq = Y((eq) ->
-	(x) -> (y) -> _if( isZero x )(
+	(x) -> (y) -> If( isZero x )(
 		(z) -> isZero y
 	)(
-		(z) -> _if( isZero y )(
-			(z) -> _false
+		(z) -> If( isZero y )(
+			(z) -> False
 		)(
 			(z) -> eq(decr x)(decr y)
 		)
@@ -32,20 +32,20 @@ eq = Y((eq) ->
 
 # Define less than
 lt = Y((lt) ->
-	(x) -> (y) -> _if( isZero x )(
-		(z) -> _not isZero y
+	(x) -> (y) -> If( isZero x )(
+		(z) -> Not isZero y
 	)(
 		(z) -> lt(decr x)(decr y)
 	)
 )
 
 # Define greater than
-gt = (x) -> (y) -> _not _or(eq(x)(y))(lt(x)(y))
+gt = (x) -> (y) -> Not Or(eq(x)(y))(lt(x)(y))
 
 
 # Define addition
 add = Y((add) ->
-	(x) -> (y) -> _if( isZero x )(
+	(x) -> (y) -> If( isZero x )(
 		(z) -> y
 	)(
 		(z) -> add(decr x)(incr y)
@@ -54,7 +54,7 @@ add = Y((add) ->
 
 # Define subtraction
 sub = Y((sub) ->
-	(x) -> (y) -> _if( isZero y )(
+	(x) -> (y) -> If( isZero y )(
 		(z) -> x
 	)(
 		(z) -> sub(decr x)(decr y)
@@ -63,11 +63,11 @@ sub = Y((sub) ->
 
 # Define multiplication
 mul = Y((mul) ->
-	(x) -> (y) -> _if( isZero x )(
+	(x) -> (y) -> If( isZero x )(
 		(z) -> _0
 	)(
 		(z) ->
-			_if( eq(x)(_1) )(
+			If( eq(x)(_1) )(
 				(z) -> y
 			)(
 				(z) -> add(mul(decr x)(y))(y)
@@ -77,7 +77,7 @@ mul = Y((mul) ->
 
 # Define modulo
 mod = Y((mod) ->
-	(x) -> (y) -> _if( lt(x)(y) )(
+	(x) -> (y) -> If( lt(x)(y) )(
 		(z) -> x
 	)(
 		(z) -> mod(sub(x)(y))(y)
@@ -86,7 +86,7 @@ mod = Y((mod) ->
 
 # Define division
 div = Y((div) ->
-	(x) -> (y) -> _if( lt(x)(y) )(
+	(x) -> (y) -> If( lt(x)(y) )(
 		(z) -> _0
 	)(
 		(z) -> incr(div(sub(x)(y))(y))

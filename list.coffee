@@ -1,20 +1,20 @@
 # vim: set noexpandtab:
 #
-emptyList = _true _true
-cons = (x) -> (y) -> (emptyCheck) -> emptyCheck(_false)((cond) -> cond(x)(y))
+emptyList = True True
+cons = (x) -> (y) -> (emptyCheck) -> emptyCheck(False)((cond) -> cond(x)(y))
 pair = (a) -> (b) -> cons(a)(cons(b)(emptyList))
-head = (l) -> l(_false)(_true)
+head = (l) -> l(False)(True)
 fst = head
-tail = (l) -> l(_false)(_false)
+tail = (l) -> l(False)(False)
 snd = O(head)(tail)
-isEmpty = (l) -> l _true
+isEmpty = (l) -> l True
 
 filter = Y((filter) ->
 	(f) -> (l) ->
-		_if( isEmpty l )(
+		If( isEmpty l )(
 			(z) -> emptyList
 		)(
-			(z) -> _if(f (head l))(
+			(z) -> If(f (head l))(
 				cons(head l)(filter(f)(tail l))
 			)(
 				filter(f)(tail l)
@@ -24,7 +24,7 @@ filter = Y((filter) ->
 
 length = Y((length) ->
 	(l) ->
-		_if( isEmpty l )(
+		If( isEmpty l )(
 			(z) -> _0
 		)(
 			(z) -> incr(length(tail l))
@@ -33,7 +33,7 @@ length = Y((length) ->
 
 map = Y((map) ->
 	(f) -> (l) ->
-		_if( isEmpty l )(
+		If( isEmpty l )(
 			(z) -> emptyList
 		)(
 			(z) -> cons(f(head l))(map(f)(tail l))
@@ -42,21 +42,21 @@ map = Y((map) ->
 
 listEq = Y((listEq) ->
     (l1) -> (l2) ->
-        _if( isEmpty l1 )(
+        If( isEmpty l1 )(
             (z) -> isEmpty l2
         )(
             (z) ->
-                _if( isEmpty l2 )(
-                    (z) -> _false
+                If( isEmpty l2 )(
+                    (z) -> False
                 )(
-                    (z) -> _and(eq(head l1)(head l2))(listEq(tail l1)(tail l2))
+                    (z) -> And(eq(head l1)(head l2))(listEq(tail l1)(tail l2))
                 )
         )
 )
 
 listItem = Y((listItem) ->
 	(l) -> (i) ->
-		_if( _or(eq(length(l))(_1))(eq(i)(_0)) )(
+		If( Or(eq(length(l))(_1))(eq(i)(_0)) )(
 			(z) -> head l
 		)(
 			(z) -> listItem(tail l)(decr(i))
@@ -65,7 +65,7 @@ listItem = Y((listItem) ->
 
 push = Y((push) ->
 	(l) -> (i) ->
-		_if( isEmpty l )(
+		If( isEmpty l )(
 			(z) -> cons(i)(l)
 		)(
 			(z) -> cons(head l)(push(tail l)(i))

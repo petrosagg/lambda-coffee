@@ -1,16 +1,16 @@
 # vim: set noexpandtab:
-emptyStream = pair(_true)(_true)
-consStream = (head) -> (tailPromise) -> pair(_false)(pair(head)(tailPromise))
+emptyStream = pair(True)(True)
+consStream = (head) -> (tailPromise) -> pair(False)(pair(head)(tailPromise))
 
 isEmptyStream = fst
 
 headStream = O(fst)(snd)
 
-tailStream = (s) -> snd(snd(s))(_true)
+tailStream = (s) -> snd(snd(s))(True)
 
 take = Y((take) ->
 	(s) -> (n) ->
-		_if( isZero n )(
+		If( isZero n )(
 			(z) -> emptyList
 		)(
 			(z) -> cons(headStream s)(take(tailStream s)(decr n))
@@ -26,11 +26,11 @@ zipStreams = Y((zipStreams) ->
 )
 filterStream = Y((filterStream) ->
 	(f) -> (s) ->
-		_if( isEmptyStream s )(
+		If( isEmptyStream s )(
 			(z) -> emptyStream
 		)(
 			(z) ->
-                _if(f (headStream s))(
+                If(f (headStream s))(
                     (z) ->
                         consStream(headStream s)(
                             (z) -> filterStream(f)(tailStream s)

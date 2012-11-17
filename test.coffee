@@ -14,14 +14,14 @@ assertEquals = (a, b, msg) ->
 	assertTrue(a == b, msg)
 
 assertTop = (cond, msg) ->
-	_if(cond)(
+	If(cond)(
 		(z) -> assertTrue(true, msg)
 	)(
 		(z) -> assertTrue(false, msg)
 	)
 
 assertBottom = (cond, msg) ->
-	_if(cond)(
+	If(cond)(
 		(z) -> assertFalse(true, msg)
 	)(
 		(z) -> assertFalse(false, msg)
@@ -29,76 +29,76 @@ assertBottom = (cond, msg) ->
 
 testCases =
 	testBoolean: ->
-		_if(_true)(
+		If(True)(
 			(z) -> assertTrue(true)
 		)(
 			(z) -> assertTrue(false, 'if(true) runs else')
 		)
-		_if(_false)(
+		If(False)(
 			(z) -> assertTrue(false, 'if(false) runs body')
 		)(
 			(z) -> assertTrue(true)
 		)
 
 		# Testing logical NOT
-		_if(_not(_true))(
-			(z) -> assertTrue(false, '_not(true) is true')
+		If(Not(True))(
+			(z) -> assertTrue(false, 'Not(true) is true')
 		)(
 			(z) -> assertTrue(true)
 		)
-		_if(_not(_false))(
+		If(Not(False))(
 			(z) -> assertTrue(true)
 		)(
-			(z) -> assertTrue(false, '_not(false) is false')
+			(z) -> assertTrue(false, 'Not(false) is false')
 		)
 
 		# Testing logical OR
-		_if(_or(_false)(_true))(
+		If(Or(False)(True))(
 			(z) -> assertTrue(true)
 		)(
-			(z) -> assertTrue(false, '_or(false)(true) is false')
+			(z) -> assertTrue(false, 'Or(false)(true) is false')
 		)
-		_if(_or(_true)(_false))(
+		If(Or(True)(False))(
 			(z) -> assertTrue(true)
 		)(
-			(z) -> assertTrue(false, '_or(true)(false) is false')
+			(z) -> assertTrue(false, 'Or(true)(false) is false')
 		)
-		_if(_or(_true)(_true))(
+		If(Or(True)(True))(
 			(z) -> assertTrue(true)
 		)(
-			(z) -> assertTrue(false, '_or(true)(true) is false')
+			(z) -> assertTrue(false, 'Or(true)(true) is false')
 		)
-		_if(_or(_false)(_false))(
-			(z) -> assertTrue(false, '_or(false)(false) is true')
+		If(Or(False)(False))(
+			(z) -> assertTrue(false, 'Or(false)(false) is true')
 		)(
 			(z) -> assertTrue(true)
 		)
 
 		# Testing logical AND
-		_if(_and(_false)(_true))(
-			(z) -> assertTrue(false, '_and(false)(true) is true')
+		If(And(False)(True))(
+			(z) -> assertTrue(false, 'And(false)(true) is true')
 		)(
 			(z) -> assertTrue(true)
 		)
-		_if(_and(_true)(_false))(
-			(z) -> assertTrue(false, '_and(true)(false) is true')
+		If(And(True)(False))(
+			(z) -> assertTrue(false, 'And(true)(false) is true')
 		)(
 			(z) -> assertTrue(true)
 		)
-		_if(_and(_true)(_true))(
+		If(And(True)(True))(
 			(z) -> assertTrue(true)
 		)(
-			(z) -> assertTrue(false, '_and(true)(true) is false')
+			(z) -> assertTrue(false, 'And(true)(true) is false')
 		)
-		_if(_and(_false)(_false))(
-			(z) -> assertTrue(false, '_and(false)(false) is true')
+		If(And(False)(False))(
+			(z) -> assertTrue(false, 'And(false)(false) is true')
 		)(
 			(z) -> assertTrue(true)
 		)
 	testY: ->
 		fac = Y((fac) ->
 			(n) ->
-				_if( isZero n )(
+				If( isZero n )(
 					(z) -> _1
 				)(
 					(z) -> mul(n)(fac(decr(n)))
@@ -152,14 +152,14 @@ testCases =
 		assertTop(listEq(emptyList)(emptyList))
 	testStreams: ->
 		allOnes = Y((allOnes) ->
-			(z) -> consStream(_1)((z) -> allOnes(_true))
+			(z) -> consStream(_1)((z) -> allOnes(True))
 		)()
 		l = take(allOnes)(@_5)
 		assertTop(eq(head(tail(tail(tail(tail l)))))(_1))
 
 		naturals = Y((naturals) ->
 			(z) -> consStream(_1)(
-				(z) -> addStreams(naturals _true)(allOnes)
+				(z) -> addStreams(naturals True)(allOnes)
 			)
 		)()
 		l = take(naturals)(@_5)
@@ -174,7 +174,7 @@ testCases =
 
 		# printList take(oneTwo)(@_2)
 
-		# even = filterStream((x) -> _true)(
+		# even = filterStream((x) -> True)(
 		# printList take(oneTwo)(@_2)
 
 		# sieve = (s) -> consStream(headStream s)(

@@ -2,7 +2,7 @@
 
 stringBuilder = Y((stringBuilder) ->
 	(l) -> (i) ->
-		_if( isZero i )(
+		If( isZero i )(
 			(z) -> l
 		)(
 			(z) -> stringBuilder push(l)(i)

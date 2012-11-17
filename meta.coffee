@@ -3,7 +3,7 @@
 # Meta-stuff
 metaEval = (n) ->
 	stateEval = (n, i) ->
-		_if( isZero n )(
+		If( isZero n )(
 			(z) -> i
 		)(
 			(z) -> stateEval(decr(n), i + 1)

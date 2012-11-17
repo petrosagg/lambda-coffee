@@ -1,12 +1,12 @@
 # Define true
-_true = (x) -> (y) -> x
+True = (x) -> (y) -> x
 # Define false
-_false = (x) -> (y) -> y
+False = (x) -> (y) -> y
 
 # Define if
-_if = (cond) -> (truth) -> (fail) -> cond(truth)(fail)()
+If = (cond) -> (truth) -> (fail) -> cond(truth)(fail)()
 
 # Define boolean operators
-_not = (cond) -> cond(_false)(_true)
-_and = (cond1) -> (cond2) -> cond1(cond2(_true)(_false))(_false)
-_or = (cond1) -> (cond2) -> cond1(_true)(cond2(_true)(_false))
+Not = (cond) -> cond(False)(True)
+And = (cond1) -> (cond2) -> cond1(cond2(True)(False))(False)
+Or = (cond1) -> (cond2) -> cond1(True)(cond2(True)(False))

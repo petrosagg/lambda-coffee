@@ -79,7 +79,7 @@ map = Y((map) ->
 		)
 )
 listEq = Y((listEq) ->
-    (l1) -> (l2) ->
+    (comp) -> (l1) -> (l2) ->
         If( isEmpty l1 )(
             (z) -> isEmpty l2
         )(
@@ -87,7 +87,7 @@ listEq = Y((listEq) ->
                 If( isEmpty l2 )(
                     (z) -> False
                 )(
-                    (z) -> And(eq(head l1)(head l2))(listEq(tail l1)(tail l2))
+                    (z) -> And(comp(head l1)(head l2))(listEq(comp)(tail l1)(tail l2))
                 )
         )
 )

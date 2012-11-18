@@ -128,3 +128,22 @@ reverse = Y((reverse) ->
 			(z) -> push(reverse(tail l))(head l)
 		)
 )
+
+merge = Y((merge) ->
+	(pred) -> (l1) -> (l2) ->
+		If( isEmpty l1 )(
+			(z) -> l2
+		)(
+			(z) ->
+				If( isEmpty l2 )(
+					(z) -> l1
+				)(
+					(z) ->
+						If( pred(head l1)(head l2) )(
+							(z) -> cons(head l1)(merge(pred)(tail l1)(l2))
+						)(
+							(z) -> cons(head l2)(merge(pred)(l1)(tail l2))
+						)
+				)
+		)
+)

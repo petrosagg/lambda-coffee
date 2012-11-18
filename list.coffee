@@ -147,3 +147,16 @@ merge = Y((merge) ->
 				)
 		)
 )
+
+leftHalf = (l) -> take(l)(div(length(l))(incr(_1)))
+rightHalf = (l) -> reverse(take(reverse(l))(sub(length(l))(div(length(l))(incr(_1)))))
+
+mergesort = Y((mergesort) ->
+	(pred) -> (l) ->
+		If( Or(isEmpty l)(eq(_1)(length(l))) )(
+			(z) -> l
+		)(
+			(z) ->
+				merge(pred)(mergesort(pred)(leftHalf l))(mergesort(pred)(rightHalf l))
+		)
+)

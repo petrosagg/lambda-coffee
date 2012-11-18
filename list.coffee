@@ -119,3 +119,12 @@ reduce = Y((reduce) ->
 )
 sum = reduce(add)(_0)
 product = reduce(mul)(_1)
+
+reverse = Y((reverse) ->
+	(l) ->
+		If( isEmpty l )(
+			(z) -> l
+		)(
+			(z) -> push(reverse(tail l))(head l)
+		)
+)

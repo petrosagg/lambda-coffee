@@ -20,8 +20,18 @@ metaUneval = (n) ->
 	stateUneval(n, _0)
 
 log = console.log.bind console
-print = O(log)(metaEval)
-printList = O(length)(map print)
+
+print = (x) ->
+	log(metaEval(x))
+
+printList = (l) ->
+	If( isEmpty l )(
+		(z) -> id
+	)(
+		(z) ->
+			print (head l)
+			printList (tail l)
+	)
 
 buildList = (els) ->
 	if els.length is 0
@@ -30,6 +40,8 @@ buildList = (els) ->
 		h = els.shift()
 		cons(h)(buildList(els))
 
-printChar = O(O(log)(String.fromCharCode))(metaEval)
+printChar = (x) ->
+	log(String.fromCharCode(metaEval(x)))
+	id
 
 printString = map printChar

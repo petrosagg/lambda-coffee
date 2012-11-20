@@ -225,6 +225,7 @@ testCases =
 				)
 		)
 		primes = sieve(tail naturals)
+		printList primes
 		firstPrimes = take(primes)(@_10)
 		assertTop(eq(item(firstPrimes)(@_29))(@_29))
 
